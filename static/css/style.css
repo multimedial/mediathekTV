@@ -1,0 +1,366 @@
+* { 
+    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+}
+
+body, html { 
+    width: 100vw; 
+    height: 100vh; 
+    background: #000; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    overflow: hidden; 
+}
+
+.app-container { 
+    display: flex; 
+    flex-direction: column; 
+    height: 100vh; 
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover-Trigger für den oberen Rand */
+.top-hover-trigger {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    z-index: 35;
+    pointer-events: auto;
+}
+
+/* Kopfzeile (Standardmäßig ausgeblendet) */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55px;
+    background: rgba(10, 10, 12, 0.95);
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 36;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1),
+                opacity 0.25s ease,
+                visibility 0.35s;
+    pointer-events: none;
+}
+
+/* Einblenden bei Hover über den oberen Rand oder den Header selbst */
+.top-hover-trigger:hover + header,
+header:hover {
+    transform: translateY(0%);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+h1 {
+    font-size: 1rem;
+    color: #888;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Zentrierte Suche */
+.search-box {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.search-box input {
+    flex-grow: 1;
+    background: #1a1a1e;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.search-box input:focus { border-color: #e50914; }
+
+.search-box button {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.search-box button:hover { background: #b80710; }
+
+/* Player-Wrapper füllt den gesamten Bildschirm aus */
+.player-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Video */
+video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    outline: none;
+    display: block;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+/* Mute Toggle Button */
+.mute-toggle-btn {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 30;
+    background: rgba(10, 10, 12, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.3s ease;
+    pointer-events: auto;
+}
+
+.mute-toggle-btn:hover {
+    transform: scale(1.1);
+    background: rgba(229, 9, 20, 0.9);
+    border-color: #e50914;
+}
+
+/* Verstecken, wenn der Ton an ist */
+.mute-toggle-btn.unmuted {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Keine-Ergebnisse-Hinweis */
+#noResultsMessage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 25, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #e50914;
+    padding: 40px 50px;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 50;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    width: 90%;
+    display: none;
+    pointer-events: auto;
+}
+
+#noResultsMessage h3 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+#noResultsMessage p {
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Unteres Overlay (Aktuelle Sendung) */
+.bottom-hover-trigger {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.tv-hud {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    background: rgba(10, 10, 12, 0.92);
+    padding: 18px 30px;
+    border-radius: 12px;
+    border-top: 3px solid #e50914;
+    backdrop-filter: blur(12px);
+    z-index: 25;
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1),
+                opacity 0.25s ease,
+                visibility 0.35s;
+    pointer-events: none;
+}
+
+.player-wrapper:hover .tv-hud {
+    transform: translate(-50%, 0%);
+    opacity: 1;
+    visibility: visible;
+}
+
+.badge {
+    display: inline-block;
+    background: #e50914;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.tv-hud h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.3rem;
+    color: #fff;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.tv-hud p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #aaa;
+}
+
+/* Rechtes Overlay (Sendeplan) */
+.right-hover-trigger {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    z-index: 28;
+    pointer-events: auto;
+}
+
+.playlist-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 360px;
+    height: 100%;
+    background: rgba(12, 12, 15, 0.95);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    z-index: 29;
+    box-shadow: -10px 0 35px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1),
+                opacity 0.25s ease,
+                visibility 0.35s;
+}
+
+.right-hover-trigger:hover + .playlist-overlay,
+.playlist-overlay:hover {
+    transform: translateX(0%);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.playlist-header {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    color: #e50914;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.playlist-query-badge {
+    color: #aaa;
+    font-size: 0.8rem;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: break-word;
+}
+
+.playlist-items { 
+    overflow-y: auto; 
+    flex-grow: 1; 
+}
+
+.program-item { 
+    padding: 16px 20px; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+    cursor: pointer; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    transition: background 0.2s, border-left 0.2s;
+}
+
+.program-item:hover { background: rgba(255, 255, 255, 0.08); }
+
+.program-item.active { 
+    border-left: 4px solid #e50914; 
+    background: rgba(229, 9, 20, 0.15); 
+    padding-left: 16px;
+}
+
+.item-channel { font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600; }
+.item-title { font-size: 0.95rem; color: #ddd; line-height: 1.4; }
+.program-item.active .item-title { color: #fff; font-weight: bold; }
+
+.no-items-placeholder {
+    padding: 25px 20px;
+    color: #666;
+    font-size: 0.85rem;
+    text-align: center;
+}

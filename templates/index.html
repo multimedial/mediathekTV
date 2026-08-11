@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuratiertes TV - Live Stream</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Trigger-Zone am oberen Rand -->
+    <div class="top-hover-trigger"></div>
+    
+    <header>
+        <h1>Mediathek TV</h1>
+        <form class="search-box" action="/" method="POST">
+            <input type="text" name="keyword" placeholder="Thema hinzufügen..." value="{{ search_query }}" required>
+            <button type="submit">Suchen</button>
+        </form>
+    </header>
+
+    <div class="player-wrapper">
+        <video id="tvPlayer" controls autoplay muted playsinline>
+            <source id="videoSource" src="" type="video/mp4">
+            Browser unterstützt kein Video.
+        </video>
+
+        <!-- Mute/Unmute-Button unten links -->
+        <button id="muteToggleBtn" class="mute-toggle-btn" aria-label="Ton einschalten">
+            <span id="muteIcon">🔇</span>
+        </button>
+
+        <!-- Keine Ergebnisse Overlay-Meldung -->
+        <div id="noResultsMessage">
+            <h3>Keine Sendungen gefunden</h3>
+            <p>Für den Suchbegriff <strong id="searchedKeyword" style="color: #fff;"></strong> konnten in der Mediathek leider keine passenden Beiträge gefunden werden.</p>
+        </div>
+
+        <!-- UNTERES OVERLAY (Aktuelle Sendung) -->
+        <div class="bottom-hover-trigger"></div>
+        <div class="tv-hud">
+            <span class="badge">Aktuelle Sendung</span>
+            <h2 id="currentTitle">Programm wird geladen...</h2>
+            <p id="currentMeta">Bitte warten</p>
+        </div>
+
+        <!-- RECHTES OVERLAY (Sendeplan) -->
+        <div class="right-hover-trigger"></div>
+        <div class="playlist-overlay">
+            <div class="playlist-header">
+                <span>Sendeplan</span>
+                <div id="playlistSearchQuery" class="playlist-query-badge"></div>
+            </div>
+            <div class="playlist-items" id="playlistContainer">
+                <!-- Wird via JavaScript befüllt -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.SEARCH_QUERY = "{{ search_query }}";
+</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
